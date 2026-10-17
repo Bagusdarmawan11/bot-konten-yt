@@ -2563,6 +2563,25 @@ def handle_teks(message):
 # ==========================================
 app = Flask(__name__)
 
+# Auto-start semua thread saat dijalankan oleh Gunicorn
+import atexit
+_threads_started = False
+
+def _start_threads():
+    global _threads_started
+    if _threads_started:
+        return
+    _threads_started = True
+    threading.Thread(target=jalankan_bot, daemon=True).start()
+    threading.Thread(target=run_scheduler, daemon=True).start()
+    threading.Thread(target=run_keep_alive, daemon=True).start()
+    threading.Thread(target=run_youtube_monitor, daemon=True).start()
+    threading.Thread(target=run_weekly_summary, daemon=True).start()
+    print("[STARTUP] Semua thread berhasil distart.")
+
+# Jalankan saat Gunicorn import module ini
+_start_threads()
+
 @app.route('/')
 def home():
     return "Bot Konten Multi-Tema v10 — DIY | AI Toy Construction | AI Animation | Multi-Bahasa — Running 24/7"
