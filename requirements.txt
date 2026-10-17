@@ -1,0 +1,8 @@
+pyTelegramBotAPI
+google-genai
+psycopg2-binary
+Flask
+schedule
+gTTS
+requests
+gunicorn
