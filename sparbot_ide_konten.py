@@ -2579,8 +2579,6 @@ def _start_threads():
     threading.Thread(target=run_weekly_summary, daemon=True).start()
     print("[STARTUP] Semua thread berhasil distart.")
 
-# Jalankan saat Gunicorn import module ini
-_start_threads()
 
 @app.route('/')
 def home():
@@ -3369,11 +3367,9 @@ def run_weekly_summary():
         except Exception as e:
             print(f"[YT WEEKLY LOOP ERROR] {e}")
 
+# Jalankan thread saat diimport Gunicorn maupun dijalankan langsung
+_start_threads()
+
 if __name__ == "__main__":
-    threading.Thread(target=jalankan_bot, daemon=True).start()
-    threading.Thread(target=run_scheduler, daemon=True).start()
-    threading.Thread(target=run_keep_alive, daemon=True).start()
-    threading.Thread(target=run_youtube_monitor, daemon=True).start()
-    threading.Thread(target=run_weekly_summary, daemon=True).start()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
