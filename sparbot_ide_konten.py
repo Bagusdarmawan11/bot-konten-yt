@@ -2579,6 +2579,19 @@ def _start_threads():
     threading.Thread(target=run_weekly_summary, daemon=True).start()
     print("[STARTUP] Semua thread berhasil distart.")
 
+    # Kirim notifikasi ke owner saat bot pertama kali nyala
+    def _notif_startup():
+        time.sleep(3)  # tunggu polling siap dulu
+        try:
+            chat_id = ambil_chat_id() or OWNER_ID
+            bot.send_message(chat_id,
+                "✅ <b>Bot aktif dan siap digunakan!</b>\n"
+                "<i>Semua thread berjalan normal.</i>",
+                parse_mode="HTML")
+        except Exception as e:
+            print(f"[STARTUP NOTIF] Gagal kirim notif: {e}")
+    threading.Thread(target=_notif_startup, daemon=True).start()
+
 
 @app.route('/')
 def home():
